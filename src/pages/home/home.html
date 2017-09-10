@@ -3,6 +3,11 @@
         <ion-title>
             Reddit Reader
         </ion-title>
+        <ion-buttons end>
+            <button ion-button icon-only (click)="filters()">
+                <ion-icon name="funnel"></ion-icon>
+            </button>
+        </ion-buttons>
     </ion-navbar>
 </ion-header>
 <ion-content>
@@ -11,7 +16,7 @@
         </ion-refresher-content>
     </ion-refresher>
     <ion-list>
-        <button ion-item *ngFor="let feed of feeds" (click)="open(feed.data.url)">
+        <button ion-item text-wrap *ngFor="let feed of feeds" (click)="open(feed.data.url)">
             <ion-thumbnail item-left>
                 <img [src]="feed.data.thumbnail">
             </ion-thumbnail>

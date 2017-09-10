@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Http } from '@angular/http';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
-import { AlertController, LoadingController, NavController } from 'ionic-angular';
+import { AlertController, ActionSheetController, LoadingController, NavController } from 'ionic-angular';
 
 @Component({
     selector: 'page-home',
@@ -11,9 +11,18 @@ export class HomePage implements OnInit {
 
     public url;
     public feeds;
+    public hasFilter;
+    public noFilter;
 
-    constructor(public navCtrl: NavController, private _loadController: LoadingController, private _alertController: AlertController, private _http: Http, private _inAppBrowser: InAppBrowser) {
+    constructor(public navCtrl: NavController
+        , private _loadController: LoadingController
+        , private _alertController: AlertController
+        , private _http: Http
+        , private _inAppBrowser: InAppBrowser
+        , public actionSheetController: ActionSheetController) {
+            
         this.url = 'https://www.reddit.com/new.json';
+        this.hasFilter = false;
     }
 
     ngOnInit() {
@@ -44,6 +53,8 @@ export class HomePage implements OnInit {
                     if (!feed.data.thumbnail || feed.data.thumbnail.indexOf('b.thumbs.redditmedia.com') === -1)
                         feed.data.thumbnail = 'http://www.redditstatic.com/icon.png';
                 });
+
+                this.noFilter = this.feeds;
             })
             .catch(err => {
                 loader.dismiss();
@@ -75,5 +86,58 @@ export class HomePage implements OnInit {
         this.load(this.url + before);
 
         refresher.complete();
+    }
+
+    filters(): void {
+        let actionSheet = this.actionSheetController.create({
+            title: 'Filter options:',
+            buttons: [
+                {
+                    text: 'Music',
+                    handler: () => {
+                        this.feeds = this.noFilter.filter((feed) => feed.data.subreddit.toLowerCase() === "music");
+                        this.hasFilter = true;
+                    }
+                },
+                {
+                    text: 'Movies',
+                    handler: () => {
+                        this.feeds = this.noFilter.filter((feed) => feed.data.subreddit.toLowerCase() === "movies");
+                        this.hasFilter = true;
+                    }
+                },
+                {
+                    text: 'Games',
+                    handler: () => {
+                        this.feeds = this.noFilter.filter((feed) => feed.data.subreddit.toLowerCase() === "gaming");
+                        this.hasFilter = true;
+                    }
+                },
+                {
+                    text: 'Pictures',
+                    handler: () => {
+                        this.feeds = this.noFilter.filter((feed) => feed.data.subreddit.toLowerCase() === "pics");
+                        this.hasFilter = true;
+                    }
+                },
+                {
+                    text: 'Ask Reddit',
+                    handler: () => {
+                        this.feeds = this.noFilter.filter((feed) => feed.data.subreddit.toLowerCase() === "askreddit");
+                        this.hasFilter = true;
+                    }
+                },
+                {
+                    text: 'Cancel',
+                    role: 'cancel',
+                    handler: () => {
+                        this.feeds = this.noFilter;
+                        this.hasFilter = false;
+                    }
+                }
+            ]
+        });
+
+        actionSheet.present();
     }
 }
