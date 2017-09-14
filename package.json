@@ -1,8 +1,8 @@
 {
     "name": "reddit-reader-app-ionic",
     "version": "0.0.1",
-    "author": "Ionic Framework",
-    "homepage": "http://ionicframework.com/",
+    "author": "Matheus Filipe T. Chaves <matheus.02468@gmail.com>",
+    "homepage": "https://github.com/matheusFTC/reddit-reader-app-ionic#readme",
     "private": true,
     "scripts": {
         "clean": "ionic-app-scripts clean",
@@ -43,7 +43,7 @@
         "@ionic/app-scripts": "2.1.4",
         "typescript": "2.3.4"
     },
-    "description": "An Ionic project",
+    "description": "Reddit Feeds Reader Using Ionic 2.",
     "cordova": {
         "plugins": {
             "cordova-plugin-inappbrowser": {},

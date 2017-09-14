@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { Http } from '@angular/http';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
 import { AlertController, ActionSheetController, LoadingController, NavController } from 'ionic-angular';
+import { RedditServiceProvider } from '../../providers/reddit-service/reddit-service';
 
 @Component({
     selector: 'page-home',
@@ -9,63 +9,78 @@ import { AlertController, ActionSheetController, LoadingController, NavControlle
 })
 export class HomePage implements OnInit {
 
-    public url;
     public feeds;
+    public isLoaded;
     public hasFilter;
     public noFilter;
 
     constructor(public navCtrl: NavController
         , private _loadController: LoadingController
         , private _alertController: AlertController
-        , private _http: Http
         , private _inAppBrowser: InAppBrowser
-        , public actionSheetController: ActionSheetController) {
-            
-        this.url = 'https://www.reddit.com/new.json';
+        , private _actionSheetController: ActionSheetController
+        , private _redditServiceProvider: RedditServiceProvider) {
+
+        this.isLoaded = true;
         this.hasFilter = false;
     }
 
     ngOnInit() {
-        this.load(this.url);
+        this.load(undefined, undefined);
     }
 
-    load(url: string): void {
-        let loader = this._loadController.create({
-            content: "Wait..."
-        });
+    load(before: string, after: string): void {
+        if (this.isLoaded) {
+            this.isLoaded = false;
 
-        loader.present();
-
-        this._http
-            .get(this.url)
-            .map(res => res.json())
-            .toPromise()
-            .then(data => {
-                loader.dismiss();
-
-                if (this.feeds) {
-                    this.feeds = this.feeds.concat(data.data.children);
-                } else {
-                    this.feeds = data.data.children;
-                }
-
-                this.feeds.forEach((feed) => {
-                    if (!feed.data.thumbnail || feed.data.thumbnail.indexOf('b.thumbs.redditmedia.com') === -1)
-                        feed.data.thumbnail = 'http://www.redditstatic.com/icon.png';
-                });
-
-                this.noFilter = this.feeds;
-            })
-            .catch(err => {
-                loader.dismiss();
-
-                this._alertController.create({
-                    title: 'Sorry!',
-                    subTitle: 'Failed To Fetch Content',
-                    message: 'Content could not be retrieved. Please check your internet access.',
-                    buttons: [{ text: 'Ok' }]
-                }).present();
+            let loader = this._loadController.create({
+                content: "Wait..."
             });
+
+            loader.present();
+
+            let promise;
+
+            if (before) {
+                promise = this._redditServiceProvider.before(before);
+            } else if (after) {
+                promise = this._redditServiceProvider.after(after);
+            } else {
+                promise = this._redditServiceProvider.fetch();
+            }
+
+            promise
+                .then(data => {
+                    loader.dismiss();
+
+                    this.isLoaded = true;
+
+                    if (this.feeds) {
+                        this.feeds = this.feeds.concat(data.data.children);
+                    } else {
+                        this.feeds = data.data.children;
+                    }
+
+                    this.feeds.forEach((feed) => {
+                        if (!feed.data.thumbnail || feed.data.thumbnail.indexOf('b.thumbs.redditmedia.com') === -1)
+                            feed.data.thumbnail = 'http://www.redditstatic.com/icon.png';
+                    });
+
+                    this.noFilter = this.feeds;
+                })
+                .catch(err => {
+                    loader.dismiss();
+
+                    this.isLoaded = true;
+
+                    this._alertController.create({
+                        title: 'Sorry!',
+                        subTitle: 'Failed To Fetch Content',
+                        message: 'Content could not be retrieved. Please check your internet access.',
+                        buttons: [{ text: 'Ok' }]
+                    }).present();
+                });
+        }
     }
 
     open(url: string): void {
@@ -73,23 +88,23 @@ export class HomePage implements OnInit {
     }
 
     doInfinite(infiniteScroll): void {
-        let after = '?after=' + (this.feeds.length > 0) ? this.feeds[this.feeds.length - 1].data.name : '';
+        let after = (this.feeds.length > 0) ? this.feeds[this.feeds.length - 1].data.name : '';
 
-        this.load(this.url + after);
+        this.load(undefined, after);
 
         infiniteScroll.complete();
     }
 
     doRefresh(refresher): void {
-        let before = '?before=' + this.feeds[0].data.name;
+        let before = this.feeds[0].data.name;
 
-        this.load(this.url + before);
+        this.load(before, undefined);
 
         refresher.complete();
     }
 
     filters(): void {
-        let actionSheet = this.actionSheetController.create({
+        let actionSheet = this._actionSheetController.create({
             title: 'Filter options:',
             buttons: [
                 {
