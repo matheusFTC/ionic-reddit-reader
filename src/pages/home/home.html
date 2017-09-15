@@ -1,8 +1,7 @@
 <ion-header>
     <ion-navbar>
-        <ion-title>
-            Reddit Reader
-        </ion-title>
+        <ion-searchbar [(ngModel)]="title" (ionInput)="search()" placeholder="Title here..." [showCancelButton]=true>
+        </ion-searchbar>
         <ion-buttons end>
             <button ion-button icon-only (click)="filters()">
                 <ion-icon name="funnel" [style.color]="hasFilter ? 'orange' : 'inherit'"></ion-icon>

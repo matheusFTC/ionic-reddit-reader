@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { InAppBrowser } from '@ionic-native/in-app-browser';
-import { AlertController, ActionSheetController, LoadingController, NavController } from 'ionic-angular';
+import { AlertController, ActionSheetController, LoadingController, NavController, Content } from 'ionic-angular';
 import { RedditServiceProvider } from '../../providers/reddit-service/reddit-service';
 
 @Component({
@@ -9,10 +9,13 @@ import { RedditServiceProvider } from '../../providers/reddit-service/reddit-ser
 })
 export class HomePage implements OnInit {
 
+    @ViewChild(Content) content: Content;
+
     public feeds;
     public isLoaded;
     public hasFilter;
     public noFilter;
+    public title;
 
     constructor(public navCtrl: NavController
         , private _loadController: LoadingController
@@ -104,6 +107,8 @@ export class HomePage implements OnInit {
     }
 
     filters(): void {
+        this.content.scrollToTop();
+
         let actionSheet = this._actionSheetController.create({
             title: 'Filter options:',
             buttons: [
@@ -154,5 +159,13 @@ export class HomePage implements OnInit {
         });
 
         actionSheet.present();
+    }
+
+    search() {
+        this.hasFilter = false;
+
+        this.feeds = this.noFilter.filter((item) => {
+            return item.data.title.toLowerCase().indexOf(this.title.toLowerCase()) > -1;
+        });
     }
 }
