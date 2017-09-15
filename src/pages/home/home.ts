@@ -15,7 +15,8 @@ export class HomePage implements OnInit {
     public isLoaded;
     public hasFilter;
     public noFilter;
-    public title;
+    public isSearching;
+    public searchFilter;
 
     constructor(public navCtrl: NavController
         , private _loadController: LoadingController
@@ -26,9 +27,10 @@ export class HomePage implements OnInit {
 
         this.isLoaded = true;
         this.hasFilter = false;
+        this.isSearching = false;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.load(undefined, undefined);
     }
 
@@ -161,11 +163,22 @@ export class HomePage implements OnInit {
         actionSheet.present();
     }
 
-    search() {
+    showSearchBar(): void {
+        this.isSearching = true;
+    }
+
+    hideSearchBar(): void {
+        this.isSearching = false;
+        this.searchFilter = "";
+
+        this.search();
+    }
+
+    search(): void {
         this.hasFilter = false;
 
         this.feeds = this.noFilter.filter((item) => {
-            return item.data.title.toLowerCase().indexOf(this.title.toLowerCase()) > -1;
+            return item.data.title.toLowerCase().indexOf(this.searchFilter.toLowerCase()) > -1;
         });
     }
 }
