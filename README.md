@@ -1,27 +1,30 @@
 # reddit-reader-app-ionic
 Reddit Reader App com Ionic 2
 
-## How to use this template
+## Resumo
+Este projeto foi desenvolvido para a disciplina de Criação de Apps Híbridas com Cordova e Ionic, da pós-graduação em DESIGN WEB APPS COM TECNOLOGIA FRONT-END, no INSTITUTO BRASILEIRO DE EXPERTISE PROFISSIONAL.
 
-*This template does not work on its own*. The shared files for each starter are found in the [ionic2-app-base repo](https://github.com/ionic-team/ionic2-app-base).
+Serão passadas aqui instruções que permitirão obter uma cópia do projeto e executar o mesmo.
 
-To use this template, either create a new ionic project using the ionic node.js utility, or copy the files from this repository into the [Starter App Base](https://github.com/ionic-team/ionic2-app-base).
+## Como Usar
 
-### With the Ionic CLI:
+### Pré-requisitos
+O que você precisa para instalar e rodar o projeto:
 
-Take the name after `ionic2-starter-`, and that is the name of the template to be used when using the `ionic start` command below:
+1. Git (^2.8.1) - https://git-scm.com/
+2. Node.js (^6.9.4) e NPM (^3.10.10) - https://nodejs.org/
+
+### Instalando
+Um passo a passo...
+
+1. Execute o comando git clone para download dos fontes deste repositório;
+2. Vá para a pasta do projeto e execute o comando abaixo:
 
 ```bash
-$ sudo npm install -g ionic cordova
-$ ionic start myBlank blank
-```
-
-Then, to run it, cd into `myBlank` and run:
-
-```bash
-$ ionic cordova platform add ios
 $ ionic cordova run ios
 ```
 
-Substitute ios for android if not on a Mac.
+Substitua ios por android se você não estiver usando um Mac.
 
+## Licença
+MIT License (MIT).
