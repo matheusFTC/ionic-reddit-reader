@@ -1,4 +1,5 @@
-This is a starter template for [Ionic](http://ionicframework.com/docs/) projects.
+# reddit-reader-app-ionic
+Reddit Reader App com Ionic 2
 
 ## How to use this template
 

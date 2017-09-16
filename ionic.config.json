@@ -1,6 +1,6 @@
 {
     "name": "reddit-reader-app-ionic",
-    "app_id": "",
+    "app_id": "io.github.matheusftc.reddit-reader",
     "type": "ionic-angular",
     "integrations": {
         "cordova": {}
